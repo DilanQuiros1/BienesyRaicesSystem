@@ -1,0 +1,70 @@
+.header {
+  width: 100%;
+  position: relative;
+}
+
+.nav {
+  background-color: #333;
+  padding: 10px 0;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin: 0 15px;
+}
+
+.nav-item a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+#about {
+  margin-left: 27%;
+}
+
+.nav-item a:hover {
+  text-decoration: underline;
+}
+
+.headerFondo {
+  background-image: url("../Imagenes/HeaderFondo.jpg"); /* Cambia esto por la URL de tu imagen */
+  background-size: cover;
+  background-position: center;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+}
+
+.her-content {
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.her-title {
+  font-size: 36px;
+  margin: 0;
+}
+
+.her-subtitle {
+  font-size: 24px;
+  margin: 10px 0;
+}
+
+.search-bar {
+  width: 70%;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 20px;
+}
