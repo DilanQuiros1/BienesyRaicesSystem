@@ -48,6 +48,7 @@ const RegisterProperty = () => {
   });
 
   const [ubicaciones, setUbicaciones] = useState({
+    ID_Ubicacion: 0,
     Direccion: 0,
     Ciudad: "",
     Provincia: "",
@@ -56,6 +57,17 @@ const RegisterProperty = () => {
     Latitud: "",
     Longitud: "",
   });
+
+  // {
+  //   "ID_Ubicacion": 4,
+  //   "Direccion": "Calle Principal 123",
+  //   "Ciudad": "Madrid",
+  //   "Provincia": "Madrid",
+  //   "Pais": "España",
+  //   "CodigoPostal": "28001",
+  //   "Latitud": "40.41680000",
+  //   "Longitud": "-3.70380000"
+  // }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -76,7 +88,12 @@ const RegisterProperty = () => {
     setProperty({ ...property, images: files });
   };
 
-  const [selectedServices, setSelectedServices] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([
+    {
+      ID_Propiedad: 0,
+      ID_Servicio: 0,
+    },
+  ]);
   const handleSelectServices = (services) => {
     setSelectedServices(services);
     //console.log("Selected services:", services);
@@ -87,7 +104,9 @@ const RegisterProperty = () => {
   };
 
   const addProperty = () => {
-    addCaracteristicas();
+    // addCaracteristicas();
+    //addUbicaciones();
+    handleSave();
     console.log("Selected services:", selectedServices);
     console.log(property);
     console.log("Ubicaciones", ubicaciones);
@@ -150,6 +169,10 @@ const RegisterProperty = () => {
           ...prevProperty,
           ID_Caracteristicas: contador,
         }));
+        setUbicaciones((prevUbicacion) => ({
+          ...prevUbicacion,
+          ID_Ubicacion: contador,
+        }));
       } catch (error) {
         console.error("Error al obtener el contador:", error);
       }
@@ -167,6 +190,35 @@ const RegisterProperty = () => {
       console.log("Caracteristicas guardadas:", response.data);
     } catch (error) {
       console.error("Error al guardar las caracteristicas:", error);
+    }
+  };
+
+  const addUbicaciones = async (e) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/ubicaciones",
+        ubicaciones
+      );
+      console.log("Ubicaciones guardadas:", response.data);
+    } catch (error) {
+      console.error("Error al guardar las Ubicaciones:", error);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      for (const service of selectedServices) {
+        const response = await axios.post(
+          "http://localhost:3000/propiedad-servicio",
+          {
+            Propiedad_ID: 1,
+            Servicio_ID: service.ID_Servicio, // Usamos el nombre del servicio directamente
+          }
+        );
+        console.log("Service added:", response.data);
+      }
+    } catch (error) {
+      console.error("Error saving services:", error);
     }
   };
 

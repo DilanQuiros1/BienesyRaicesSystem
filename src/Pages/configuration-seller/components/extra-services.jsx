@@ -7,29 +7,34 @@ import { Container, Row, Col } from "react-bootstrap";
 const Services = [
   {
     name: "wi-fi",
+    ID_Servicio: 1,
   },
   {
     name: "parking",
+    ID_Servicio: 2,
   },
   {
     name: "pool",
+    ID_Servicio: 3,
   },
 ];
 
 function ListOfServices({ onSelectServices }) {
   const [selectedServices, setSelectedServices] = useState([]);
 
-  const handleSelect = (service) => {
-    setSelectedServices((prevSelected) =>
-      prevSelected.includes(service)
-        ? prevSelected.filter((item) => item !== service)
-        : [...prevSelected, service]
-    );
-  };
-
   useEffect(() => {
     onSelectServices(selectedServices);
   }, [selectedServices, onSelectServices]);
+
+  const handleSelect = (service) => {
+    setSelectedServices((prevSelected) =>
+      prevSelected.some((item) => item.ID_Servicio === service.ID_Servicio)
+        ? prevSelected.filter(
+            (item) => item.ID_Servicio !== service.ID_Servicio
+          )
+        : [...prevSelected, service]
+    );
+  };
 
   return (
     <Container>
@@ -42,8 +47,10 @@ function ListOfServices({ onSelectServices }) {
             {Services.map((data, index) => (
               <Dropdown.Item
                 key={index}
-                onClick={() => handleSelect(data.name)}
-                active={selectedServices.includes(data.name)}
+                onClick={() => handleSelect(data)}
+                active={selectedServices.some(
+                  (service) => service.ID_Servicio === data.ID_Servicio
+                )}
               >
                 {data.name}
               </Dropdown.Item>
@@ -58,7 +65,7 @@ function ListOfServices({ onSelectServices }) {
             <ul>
               {selectedServices.map((service, index) => (
                 <li key={index}>
-                  <i className="bi bi-check-lg"></i> {service}
+                  <i className="bi bi-check-lg"></i> {service.name}
                 </li>
               ))}
             </ul>
@@ -71,6 +78,7 @@ function ListOfServices({ onSelectServices }) {
 
 ListOfServices.propTypes = {
   onSelectServices: PropTypes.func.isRequired,
+  propiedadId: PropTypes.number.isRequired,
 };
 
 export default ListOfServices;
