@@ -5,11 +5,11 @@ import "../Styles/FrameComponent1.css";
 const FrameComponent1 = ({ className = "", onImageClick }) => {
   const images = [
     "/009870x420jpg@2x.png",
-    "/12250x130jpg@2x.png",
-    "/10250x130jpg@2x.png",
-    "/009250x130jpg@2x.png",
-    "/008250x130jpg@2x.png",
-    "/007250x130jpg@2x.png"
+    "/009870x420jpg@2x.png",
+    "/009870x420jpg@2x.png",
+    "/009870x420jpg@2x.png",
+    "/009870x420jpg@2x.png",
+    "/009870x420jpg@2x.png"
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
