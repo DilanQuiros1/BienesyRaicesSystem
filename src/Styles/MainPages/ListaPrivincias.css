@@ -1,0 +1,107 @@
+#ContainerMain {
+  position: relative;
+  top: 30px;
+  background: #6c757d0f;
+  bottom: 25px;
+  display: flex;
+  overflow-x: auto; /* Para permitir el desplazamiento horizontal */
+  white-space: nowrap; /* Para evitar que los elementos se envuelvan a la siguiente línea */
+  padding: 10px; /* Espaciado opcional para que la barra de desplazamiento no esté pegada a los elementos */
+}
+.icon-liked {
+  margin-left: 45%;
+}
+#ContainerTextInitial {
+  position: relative;
+  top: 50px;
+}
+#ListaProvincias {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.Container-provincia {
+  display: inline-block;
+  margin-right: 10px; /* Espaciado entre los elementos */
+  position: relative;
+}
+
+.fondo-img {
+  background-size: cover;
+  background-position: center;
+  height: 15em;
+  width: 15em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  text-align: center;
+  border-radius: 10px; /* Bordes redondeados */
+  overflow: hidden; /* Asegura que el contenido no se desborde fuera de los bordes redondeados */
+}
+
+.fondo-img::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+  border-radius: 10px; /* Mantener bordes redondeados para la sombra */
+}
+
+.fondo-img p {
+  position: relative; /* Para asegurar que el texto esté por encima del gradiente */
+  color: white;
+  z-index: 1; /* Para que el texto esté sobre la sombra */
+  transition: transform 0.3s, box-shadow 0.3s, filter 0.3s;
+  font-weight: 700;
+}
+#ContainerCharacteristics {
+  padding: 30px;
+  margin-top: 80px;
+}
+/* Especificar imágenes de fondo para cada provincia */
+#Container-Sj .fondo-img {
+  background-image: url("/src/Imagenes/Img-provincias-main/san-jose.jpg"); /* Cambia esto por la URL de tu imagen */
+}
+
+#Container-Heredia .fondo-img {
+  background-image: url("/src/Imagenes/Img-provincias-main/heredia.jpg"); /* Cambia esto por la URL de tu imagen */
+}
+
+#Container-pz .fondo-img {
+  background-image: url("/src/Imagenes/Img-provincias-main/perez-zeledon.jpg"); /* Cambia esto por la URL de tu imagen */
+}
+
+#Container-cartago .fondo-img {
+  background-image: url("/src/Imagenes/Img-provincias-main/cartago-costa-rica.jpg"); /* Cambia esto por la URL de tu imagen */
+}
+
+#Container-guanacaste .fondo-img {
+  background-image: url("/src/Imagenes/Img-provincias-main/Guanacaste.jpg"); /* Cambia esto por la URL de tu imagen */
+}
+
+#Container-puntarenas .fondo-img {
+  background-image: url("/src/Imagenes/Img-provincias-main/puntarenas.jpg"); /* Cambia esto por la URL de tu imagen */
+}
+#Container-limon .fondo-img {
+  background-image: url("/src/Imagenes/Img-provincias-main/limon.jpg"); /* Cambia esto por la URL de tu imagen */
+}
+
+.fondo-img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.2);
+}
+
+#ventas {
+  background: #6c757d0f;
+}
+#soporte {
+  background-image: linear-gradient(180deg, #f8f9fa, #6c757d);
+}
