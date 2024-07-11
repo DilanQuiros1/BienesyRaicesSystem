@@ -1,0 +1,44 @@
+.property-form-container {
+  background-color: #e6f3ff;
+  border-radius: 10px;
+  padding: 20px;
+  font-family: "Arial, sans-serif";
+}
+
+.property-form-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #4a4a4a;
+}
+
+.property-form-group {
+  margin-bottom: 20px;
+}
+
+.property-form-label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #4a4a4a;
+}
+
+.property-form-control {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.property-form-button {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.property-form-button:hover {
+  background-color: #0056b3;
+}
