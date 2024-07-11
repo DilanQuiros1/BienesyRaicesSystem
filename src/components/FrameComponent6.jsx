@@ -6,7 +6,7 @@ const FrameComponent6 = ({ className = "" }) => {
   return (
     <section className={`comment-title-container-parent ${className}`}>
       <div className="comment-title-container">
-        <h2 className="leave-a-comment">Dejar comentario</h2>
+        <h2 className="leave-a-comment">Comunicate con soporte</h2>
       </div>
       <div className="comment-form-container">
         <div className="container-frame">
@@ -33,7 +33,7 @@ const FrameComponent6 = ({ className = "" }) => {
       />
       <div className="container54">
         <button className="button1">
-          <div className="post-comment">Enviar comentario</div>
+          <div className="post-comment">Enviar Mensaje</div>
           <div className="overlay1">
             <div className="container55">
               <img className="icon21" alt="" src="/icon-23.svg" />

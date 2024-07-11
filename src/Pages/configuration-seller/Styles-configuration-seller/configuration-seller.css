@@ -1,0 +1,31 @@
+.seller-view {
+  position: relative;
+  height: 50vh;
+  background-image: url("../../../Imagenes/imagen1.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.seller-header {
+  text-align: center;
+  padding: 20px;
+}
+.seller-header h1 {
+  color: #bce352;
+}
+.seller-header p {
+  color: #e9ecef;
+}
+
+.seller-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.seller-button {
+  margin: 10px;
+  width: 200px;
+}

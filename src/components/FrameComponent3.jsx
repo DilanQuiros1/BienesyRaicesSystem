@@ -21,13 +21,15 @@ const FrameComponent3 = ({ className = "" }) => {
           />
           <div className="fantastic-one-bedroom-container1">
             <p className="time-concierge-and">
-              Fantástico apartamento de un dormitorio orientado al este en este increíble Trump Place
-              Edificio de portero. Hay Una Cocina Grande, Lavadora Y Secadora.
-              Excelente iluminación y mucho espacio de guardarropas.
+              Fantástico apartamento de un dormitorio orientado al este en este
+              increíble Trump Place Edificio de portero. Hay Una Cocina Grande,
+              Lavadora Y Secadora. Excelente iluminación y mucho espacio de
+              guardarropas.
             </p>
             <p className="time-concierge-and">
-              Además, hay increíbles elementos "integrados" hechos a medida en la sala de estar
-              Habitación Que Ofrece Mucho Espacio De Almacenamiento. El Edificio Cuenta Con Gimnasio, Piscina,
+              Además, hay increíbles elementos integrados hechos a medida en la
+              sala de estar Habitación Que Ofrece Mucho Espacio De
+              Almacenamiento. El Edificio Cuenta Con Gimnasio, Piscina,
               Habitación Infantil, Servicio Valet, Completo
             </p>
           </div>

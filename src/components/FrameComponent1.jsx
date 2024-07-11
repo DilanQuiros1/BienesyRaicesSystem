@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import "../Styles/FrameComponent1.css";
 
 const FrameComponent1 = ({ className = "", onImageClick }) => {
   const images = [
     "/009870x420jpg@2x.png",
-    "/009870x420jpg@2x.png",
-    "/009870x420jpg@2x.png",
-    "/009870x420jpg@2x.png",
-    "/009870x420jpg@2x.png",
-    "/009870x420jpg@2x.png"
+    "/12250x130jpg@2x.png",
+    "/10250x130jpg@2x.png",
+    "/009250x130jpg@2x.png",
+    "/008250x130jpg@2x.png",
+    "/007250x130jpg@2x.png"
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -28,7 +28,9 @@ const FrameComponent1 = ({ className = "", onImageClick }) => {
   };
 
   const handlePrevImage = () => {
-    changeImage(currentImageIndex === 0 ? images.length - 1 : currentImageIndex - 1);
+    changeImage(
+      currentImageIndex === 0 ? images.length - 1 : currentImageIndex - 1
+    );
   };
 
   const handleNextImage = () => {
@@ -43,7 +45,7 @@ const FrameComponent1 = ({ className = "", onImageClick }) => {
             <div className="container38">
               <div className="container39">
                 <img
-                  className={`x420jpg-icon ${isTransitioning ? 'fade' : ''}`}
+                  className={`x420jpg-icon ${isTransitioning ? "fade" : ""}`}
                   alt=""
                   src={images[currentImageIndex]}
                   onClick={() => onImageClick(images[currentImageIndex])}
@@ -67,7 +69,10 @@ const FrameComponent1 = ({ className = "", onImageClick }) => {
         </div>
         <div className="container-group">
           {images.map((image, index) => (
-            <div key={index} className={`container40 ${index === 2 ? "container42" : ""}`}>
+            <div
+              key={index}
+              className={`container40 ${index === 2 ? "container42" : ""}`}
+            >
               <img
                 className={`x130jpg-icon ${index === 2 ? "x130jpg-icon2" : ""}`}
                 loading="lazy"
