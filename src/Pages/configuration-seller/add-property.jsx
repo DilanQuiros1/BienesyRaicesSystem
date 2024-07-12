@@ -28,12 +28,17 @@ const RegisterProperty = () => {
     setValidated(true);
   };
 
+  const [propertyImg, setPropertyImg] = useState({
+    ID_Propiedad: 0,
+    Url_img: [],
+  });
+
   const [property, setProperty] = useState({
+    ID_Propiedad: 0,
     ID_Vendedor: 0,
     ID_Caracteristicas: 0,
     Nombre: "",
-    Descripcion: [],
-    images: [],
+    Descripcion: "",
     Precio: "",
     ID_Ubicacion: "",
   });
@@ -85,7 +90,7 @@ const RegisterProperty = () => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    setProperty({ ...property, images: files });
+    setPropertyImg({ ...propertyImg, Url_img: files });
   };
 
   const [selectedServices, setSelectedServices] = useState([
@@ -105,10 +110,14 @@ const RegisterProperty = () => {
 
   const addProperty = () => {
     // addCaracteristicas();
-    //addUbicaciones();
-    handleSave();
+    // addUbicaciones();
+    // addPropertySeller();
+    // handleUpload2();
+    // addImagesProperty();
+    console.log("Imagenes: ", propertyImg);
+    //addServicios();
     console.log("Selected services:", selectedServices);
-    console.log(property);
+    console.log("Propiedades: ", property);
     console.log("Ubicaciones", ubicaciones);
     console.log("caracteristicas: ", caracteristicas);
     //handleUpload2();
@@ -131,13 +140,13 @@ const RegisterProperty = () => {
 
   const handleUpload2 = async () => {
     const formData = new FormData();
-    for (const file of property.images) {
+    for (const file of propertyImg.Url_img) {
       formData.append("images", file);
     }
-    console.log("Imagenes: ", property.images);
+    console.log("Imagenes: ", propertyImg.Url_img);
     try {
       const response = await axios.post(
-        "http://localhost:3001/upload",
+        "http://localhost:3000/upload",
         formData,
         {
           headers: {
@@ -145,7 +154,11 @@ const RegisterProperty = () => {
           },
         }
       );
-      console.log(response);
+
+      if (response.data && Array.isArray(response.data)) {
+        const urls = response.data.map((img) => img.secure_url);
+        setPropertyImg({ Url_img: urls });
+      }
     } catch (error) {
       console.error("Error uploading images:", error);
     } finally {
@@ -167,7 +180,19 @@ const RegisterProperty = () => {
         }));
         setProperty((prevProperty) => ({
           ...prevProperty,
+          ID_Propiedad: contador,
+        }));
+        setPropertyImg((prevImg) => ({
+          ...prevImg,
+          ID_Propiedad: contador,
+        }));
+        setProperty((prevProperty) => ({
+          ...prevProperty,
           ID_Caracteristicas: contador,
+        }));
+        setProperty((prevProperty) => ({
+          ...prevProperty,
+          ID_Ubicacion: contador,
         }));
         setUbicaciones((prevUbicacion) => ({
           ...prevUbicacion,
@@ -193,6 +218,19 @@ const RegisterProperty = () => {
     }
   };
 
+  const addImagesProperty = async (e) => {
+    console.log(propertyImg);
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/imagenes",
+        propertyImg
+      );
+      console.log("Imagenes guardadas:", response.data);
+    } catch (error) {
+      console.error("Error al guardar las Imagenes:", error);
+    }
+  };
+
   const addUbicaciones = async (e) => {
     try {
       const response = await axios.post(
@@ -205,18 +243,31 @@ const RegisterProperty = () => {
     }
   };
 
-  const handleSave = async () => {
+  const addPropertySeller = async (e) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/propiedades",
+        property
+      );
+      console.log("Propiedad guardada:", response.data);
+    } catch (error) {
+      console.error("Error al guardar las Ubicaciones:", error);
+    }
+  };
+
+  const addServicios = async () => {
     try {
       for (const service of selectedServices) {
         const response = await axios.post(
           "http://localhost:3000/propiedad-servicio",
           {
-            Propiedad_ID: 1,
+            Propiedad_ID: contador,
             Servicio_ID: service.ID_Servicio, // Usamos el nombre del servicio directamente
           }
         );
-        console.log("Service added:", response.data);
+        console.log("", response);
       }
+      //console.log("Service added:", response.data);
     } catch (error) {
       console.error("Error saving services:", error);
     }
@@ -256,10 +307,10 @@ const RegisterProperty = () => {
               <CustomLabel>ID de Vendedor</CustomLabel>
               <Form.Control
                 required
-                type="idVendedor"
-                name="idVendedor"
+                type="number"
+                name="ID_Vendedor"
                 onChange={handleChange}
-                value={property.idVendedor}
+                value={property.ID_Vendedor}
                 defaultValue=""
               />
               <Form.Control.Feedback type="invalid">
@@ -282,23 +333,6 @@ const RegisterProperty = () => {
               </Form.Control.Feedback>
               <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </Form.Group>
-            <Form.Group as={Col} md="4" controlId="validationCustom01">
-              <CustomLabel>Número de dormitorios</CustomLabel>
-              <Form.Control
-                type="number"
-                name="bedrooms"
-                onChange={handleChange}
-                value={property.bedrooms}
-                required
-              />
-              <Form.Control.Feedback type="invalid">
-                Ingresa el numero de dormitorios.
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-
-          <Row className="mb-5">
-            {" "}
             <Form.Group as={Col} md="4" controlId="validationCustomUsername">
               <CustomLabel>Precio </CustomLabel>
               <InputGroup hasValidation>
@@ -316,6 +350,29 @@ const RegisterProperty = () => {
                 </Form.Control.Feedback>
               </InputGroup>
             </Form.Group>
+          </Row>
+          <Row className="mb-5">
+            <Form.Group controlId="validationCustom01">
+              <CustomLabel>Descripcion General</CustomLabel>
+              <Form.Group className="mb-3">
+                <Form.Control
+                  required
+                  name="Descripcion"
+                  onChange={handleChange}
+                  value={property.Descripcion}
+                  as="textarea"
+                  rows={5}
+                />
+              </Form.Group>
+              <Form.Control.Feedback type="invalid">
+                Ingresa la description de la propiedad.
+              </Form.Control.Feedback>
+              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            </Form.Group>
+          </Row>
+
+          <Row className="mb-5">
+            {" "}
             <Form.Group as={Col} md="4" controlId="validationCustomUsername">
               <CustomLabel>Numero de Baños </CustomLabel>
               <InputGroup hasValidation>
@@ -404,14 +461,14 @@ const RegisterProperty = () => {
             <CustomLabel>Imágenes</CustomLabel>
             <Form.Control
               type="file"
-              name="images"
+              name="Url_img"
               multiple
               onChange={handleImageChange}
             />
             {/* <button onClick={handleUpload2}>Subir imagenes</button> */}
             <Row>
-              {property.images.length > 0 &&
-                property.images.map((image, index) => (
+              {/* {propertyImg.Url_img.length > 0 &&
+                propertyImg.Url_img.map((image, index) => (
                   <Col key={index} xs={6} md={4} lg={3}>
                     <img
                       src={URL.createObjectURL(image)}
@@ -419,7 +476,7 @@ const RegisterProperty = () => {
                       className="img-thumbnail mt-2"
                     />
                   </Col>
-                ))}
+                ))} */}
             </Row>
           </Form.Group>
 
