@@ -40,7 +40,7 @@ const DescriptionEditSeller = () => {
       </div>
       <div className="ad-image">
         <img
-          src="https://res.cloudinary.com/djxwusqnb/image/upload/v1720466005/kx0wux31byhoxjjkr5a0.jpg"
+          src="https://res.cloudinary.com/djxwusqnb/image/upload/v1721243917/nnv8pkjs7bmqbjgq1vni.jpg"
           alt="Family moving in"
         />
       </div>

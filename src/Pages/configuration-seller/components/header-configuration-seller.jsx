@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 const HeaderContainer = styled.div`
-  background-image: url("https://res.cloudinary.com/djxwusqnb/image/upload/v1720466005/kx0wux31byhoxjjkr5a0.jpg");
+  background-image: url("https://res.cloudinary.com/djxwusqnb/image/upload/v1721243119/zc4yvaxwddqlgrwqs5ez.jpg");
   background-size: cover;
   background-position: center;
   padding: 50px 0;
