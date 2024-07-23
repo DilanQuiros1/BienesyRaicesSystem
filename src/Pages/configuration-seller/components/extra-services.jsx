@@ -2,8 +2,10 @@ import { useState } from "react";
 import axios from "axios";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
+
+import "../Styles-configuration-seller/extra-services.css";
 const Services = [
   {
     name: "wi-fi",
@@ -19,7 +21,7 @@ const Services = [
   },
 ];
 
-function ListOfServices({ idPropiedad }) {
+function ListOfServices({ idPropiedad, onShowImages }) {
   const [selectedServices, setSelectedServices] = useState([]);
   // const handleSelectServices = (services) => {
   //   setSelectedServices(services);
@@ -34,6 +36,10 @@ function ListOfServices({ idPropiedad }) {
           )
         : [...prevSelected, service]
     );
+  };
+
+  const handleShowImages = () => {
+    onShowImages();
   };
   const addServicios = async () => {
     try {
@@ -53,24 +59,21 @@ function ListOfServices({ idPropiedad }) {
     }
   };
   return (
-    <div style={{ background: "#007bff1a" }}>
-      <Container>
+    <div className="container-extra-services">
+      <div>
         <Row>
           <Col>
             <h3
               style={{
-                color: "#212529",
-                textAlign: "center",
+                color: "#495057",
+
                 marginBottom: "30px",
                 fontWeight: "bold",
               }}
             >
               Servicios adicionales de la propiedad
             </h3>
-            <DropdownButton
-              id="dropdown-basic-button"
-              title="Seleccionar Servicios"
-            >
+            <DropdownButton title="Seleccionar Servicios">
               {Services.map((data, index) => (
                 <Dropdown.Item
                   key={index}
@@ -87,31 +90,60 @@ function ListOfServices({ idPropiedad }) {
         </Row>
         <Row>
           <Col>
-            <div>
+            <div className="mt-5">
               <h4 style={{ color: "#495057" }}>Servicios Seleccionados:</h4>
               <ul>
-                {selectedServices.map((service, index) => (
-                  <li key={index}>
-                    <i className="bi bi-check-lg"></i> {service.name}
-                  </li>
-                ))}
+                {selectedServices.length > 0 ? (
+                  selectedServices.map((service, index) => (
+                    <li key={index}>
+                      <i className="bi bi-check-lg"></i> {service.name}
+                    </li>
+                  ))
+                ) : (
+                  <li>No hay servicios seleccionados</li>
+                )}
               </ul>
+              {selectedServices.length > 0 ? (
+                <div>
+                  <p style={{ color: "#198754", fontSize: "1.1em" }}>
+                    Si ya agregaste todos los datos, preciona el siguiente
+                    boton.
+                  </p>
+                  <section>
+                    {" "}
+                    <Button
+                      variant="dark"
+                      onClick={addServicios}
+                      className="mt-3"
+                    >
+                      Agregar Servicios
+                    </Button>
+                    <Button
+                      variant="primary"
+                      onClick={handleShowImages}
+                      className="mt-3"
+                    >
+                      Mostrar Imagenes
+                    </Button>
+                  </section>
+                </div>
+              ) : (
+                ""
+              )}
             </div>
           </Col>
-          <section>
-            {" "}
-            <Button variant="primary" onClick={addServicios} className="mt-3">
-              Agregar Servicios
-            </Button>
-          </section>
         </Row>
-      </Container>
+      </div>
+      <div id="img-add-extraServices">
+        <section></section>
+      </div>
     </div>
   );
 }
 
 ListOfServices.propTypes = {
   idPropiedad: PropTypes.number.isRequired,
+  onShowImages: PropTypes.func.isRequired,
 };
 
 export default ListOfServices;

@@ -1,6 +1,5 @@
-import { useState, useCallback, useRef } from "react";
+import { useRef, useState, useCallback } from "react";
 import PropTypes from "prop-types";
-
 import {
   GoogleMap,
   LoadScript,
@@ -20,7 +19,6 @@ const center = {
 
 const MapComponent = ({ onPlaceSelected }) => {
   const searchBoxRef = useRef(null);
-
   const [marker, setMarker] = useState(null);
   const mapRef = useRef(null);
 
@@ -33,6 +31,7 @@ const MapComponent = ({ onPlaceSelected }) => {
     },
     [onPlaceSelected]
   );
+
   const handlePlacesChanged = () => {
     const places = searchBoxRef.current.getPlaces();
     if (places && places.length > 0) {

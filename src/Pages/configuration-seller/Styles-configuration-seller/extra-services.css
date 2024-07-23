@@ -1,0 +1,17 @@
+.container-extra-services {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+}
+
+#img-add-extraServices {
+  position: relative;
+  width: 70vh;
+  height: 50vh;
+  position: relative;
+  top: -100px;
+  border-radius: 10px;
+  background-image: url("../../../Imagenes/imagen1.jpg");
+  background-size: cover;
+  background-position: center;
+}

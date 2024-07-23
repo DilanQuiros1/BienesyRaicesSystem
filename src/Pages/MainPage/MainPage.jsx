@@ -140,20 +140,32 @@ const ListaPropiedades = () => {
 
                 <Card.Text>
                   <section className="d-flex mb-2">
-                    <i className="bi bi-house-fill"></i> {propiedad.Nombre}
+                    <i
+                      className="bi bi-house-fill"
+                      style={{ marginRight: "5px" }}
+                    ></i>{" "}
+                    {propiedad.Nombre}
                     <br />
-                    <i className="bi bi-arrows-fullscreen ms-4"></i>{" "}
+                    <i
+                      className="bi bi-arrows-fullscreen ms-4"
+                      style={{ marginRight: "5px" }}
+                    ></i>{" "}
                     {propiedad.Area_Lote} m²
                     <br />
                   </section>
                   <section className="d-flex">
-                    <i className="bi bi-droplet-fill"></i> {propiedad.Num_Banos}
+                    <i className="bi bi-droplet-fill"></i> {propiedad.Num_Banos}{" "}
+                    Baños
                     <br />
-                    <i className="bi bi-door-open-fill ms-4"></i>{" "}
+                    <i
+                      className="bi bi-door-open-fill ms-4"
+                      style={{ marginRight: "7px" }}
+                    ></i>{" "}
                     {propiedad.Num_Habitaciones} Dormitorios
                     <br />
                   </section>
-                  <i className="bi bi-geo-alt-fill"></i> {propiedad.Direccion}
+                  <i className="bi bi-geo-alt-fill"></i> {propiedad.Ciudad},{" "}
+                  {propiedad.Provincia}, {propiedad.Pais}
                   <br />
                 </Card.Text>
 

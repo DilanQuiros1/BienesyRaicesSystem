@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import MapComponent from "./maps";
 import InputGroup from "react-bootstrap/InputGroup";
 import axios from "axios";
 import PropTypes from "prop-types";
 
-const AddUbicationProperty = ({ idUbicacion }) => {
+const AddUbicationProperty = ({ idUbicacion, onShowProperty }) => {
   const [validated, setValidated] = useState(false);
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -30,6 +30,10 @@ const AddUbicationProperty = ({ idUbicacion }) => {
     Longitud: "",
   });
 
+  const handleShowProperty = () => {
+    onShowProperty();
+  };
+
   const handleChangeUbicaciones = (e) => {
     const { name, value } = e.target;
     setUbicaciones({ ...ubicaciones, [name]: value });
@@ -48,6 +52,7 @@ const AddUbicationProperty = ({ idUbicacion }) => {
         "http://localhost:3000/ubicaciones",
         ubicaciones
       );
+      onShowProperty();
       console.log("Ubicaciones guardadas:", response.data);
     } catch (error) {
       console.error("Error al guardar las Ubicaciones:", error);
@@ -55,14 +60,13 @@ const AddUbicationProperty = ({ idUbicacion }) => {
   };
 
   return (
-    <div style={{ background: "#007bff1a" }}>
-      <Container>
+    <div>
+      <div>
         <Form noValidate validated={validated}>
           <Row className="mb-5 mt-5">
             <h3
               style={{
-                color: "#212529",
-                textAlign: "center",
+                color: "#495057",
                 marginBottom: "30px",
                 fontWeight: "bold",
               }}
@@ -164,14 +168,14 @@ const AddUbicationProperty = ({ idUbicacion }) => {
           <div style={{ with: "100%" }}>
             <h3
               style={{
-                color: "#212529",
-                textAlign: "center",
+                color: "#495057",
                 marginBottom: "30px",
                 fontWeight: "bold",
               }}
             >
               Busca la hubicacion de tu propiedad
             </h3>
+
             <MapComponent onPlaceSelected={handlePlaceSelected} />
             {selectedPlace && (
               <div>
@@ -184,17 +188,21 @@ const AddUbicationProperty = ({ idUbicacion }) => {
             )}
           </div>
 
-          <Button variant="primary" onClick={handleSubmit} className="mt-3">
+          <Button variant="dark" onClick={handleSubmit} className="mt-3">
             Agregar Ubicacion
           </Button>
+          <Button variant="dark" onClick={handleShowProperty} className="mt-3">
+            Mostrar Property
+          </Button>
         </Form>
-      </Container>
+      </div>
     </div>
   );
 };
 
 AddUbicationProperty.propTypes = {
   idUbicacion: PropTypes.number.isRequired,
+  onShowProperty: PropTypes.func.isRequired,
 };
 
 export default AddUbicationProperty;
