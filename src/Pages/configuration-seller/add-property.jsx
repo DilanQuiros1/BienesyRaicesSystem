@@ -66,18 +66,18 @@ const RegisterProperty = () => {
           <h1
             style={{
               color: "rgb(59 109 158)",
-              fontSize: "4em",
+              fontSize: "3em",
               marginBottom: "10px",
               fontWeight: "bold",
             }}
           >
-            Empecemos
+            Tenemos todo listo para usted !!
           </h1>
 
           <h3
             style={{
               color: "#495057",
-              textAlign: "center",
+
               marginBottom: "30px",
               fontWeight: "bold",
             }}

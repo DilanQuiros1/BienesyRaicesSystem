@@ -5,17 +5,21 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
 import { useState } from "react";
-
+import axios from "axios";
 function RegisterClientSeller(props) {
   const [validated, setValidated] = useState(false);
   const [formValues, setFormValues] = useState({
-    identification: "",
-    nombre: "",
-    apellidos: "",
-    email: "",
-    telefono: "",
-    sexo: "",
+    ID_Usuario: "",
+    Nombre: "",
+    Apellidos: "",
+    Password_Usuario: "",
+    Correo: "",
+    Telefono: "",
+    Genero: "",
+    Tipo: "",
+    Fecha_Creacion: "2024-07-08T13:09:15.000Z",
   });
+
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
     setFormValues((prevValues) => ({
@@ -38,8 +42,26 @@ function RegisterClientSeller(props) {
     setValidated(true);
   };
 
+  const registerUser = async (e) => {
+    console.log(formValues);
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/usuarios",
+        formValues
+      );
+
+      console.log("Usuario registrado:", formValues, e, response);
+    } catch (error) {
+      console.error("Error al registrar usuario", error);
+    }
+  };
+
   const sendValues = () => {
-    console.log("form values: ", formValues);
+    if (isEditing) {
+      console.log("editing");
+    } else {
+      registerUser();
+    }
   };
 
   return (
@@ -67,10 +89,9 @@ function RegisterClientSeller(props) {
               <Form.Control
                 required
                 type="number"
-                name="identification"
-                value={formValues.identification}
+                name="ID_Usuario"
+                value={formValues.ID_Usuario}
                 onChange={handleChange}
-                placeholder="Identification"
                 defaultValue=""
               />
               <Form.Control.Feedback>bien!</Form.Control.Feedback>
@@ -85,8 +106,8 @@ function RegisterClientSeller(props) {
               <Form.Control
                 required
                 type="text"
-                name="nombre"
-                value={formValues.nombre}
+                name="Nombre"
+                value={formValues.Nombre}
                 onChange={handleChange}
                 placeholder=""
                 defaultValue=""
@@ -103,8 +124,8 @@ function RegisterClientSeller(props) {
               <Form.Control
                 required
                 type="text"
-                name="apellidos"
-                value={formValues.apellidos}
+                name="Apellidos"
+                value={formValues.Apellidos}
                 onChange={handleChange}
                 placeholder=""
                 defaultValue=""
@@ -118,8 +139,8 @@ function RegisterClientSeller(props) {
                 <Form.Control
                   type="email"
                   placeholder=""
-                  name="email"
-                  value={formValues.email}
+                  name="Correo"
+                  value={formValues.Correo}
                   onChange={handleChange}
                   aria-describedby="inputGroupPrepend"
                   required
@@ -129,17 +150,16 @@ function RegisterClientSeller(props) {
                 </Form.Control.Feedback>
               </InputGroup>
             </Form.Group>
-            <Form.Group as={Col} md="3" controlId="validationCustomUsername">
+            <Form.Group as={Col} md="5" controlId="validationCustomUsername">
               <Form.Label>Telefono de contacto</Form.Label>
               <InputGroup hasValidation>
                 <InputGroup.Text id="inputGroupPrepend">+506</InputGroup.Text>
                 <Form.Control
                   type="number"
                   placeholder=""
-                  name="telefono"
-                  value={formValues.telefono}
+                  name="Telefono"
+                  value={formValues.Telefono}
                   onChange={handleChange}
-                  aria-describedby="inputGroupPrepend"
                   required
                 />
                 <Form.Control.Feedback type="invalid">
@@ -148,18 +168,36 @@ function RegisterClientSeller(props) {
               </InputGroup>
             </Form.Group>
 
-            <Form.Group as={Col} md="4" controlId="validationCustomUsername">
+            <Form.Group as={Col} md="5" controlId="validationCustomUsername">
+              <Form.Label>Cree una contraseña</Form.Label>
+              <InputGroup hasValidation>
+                <Form.Control
+                  type="password"
+                  placeholder=""
+                  name="Password_Usuario"
+                  value={formValues.Password_Usuario}
+                  onChange={handleChange}
+                  aria-describedby="inputGroupPrepend"
+                  required
+                />
+                <Form.Control.Feedback type="invalid">
+                  agregue una contraseña
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            <Form.Group as={Col} md="5" controlId="validationCustomUsername">
               <Form.Label>sexo</Form.Label>
               <InputGroup hasValidation>
                 <Form.Select
                   aria-label="Default select example"
-                  name="sexo"
-                  value={formValues.sexo}
+                  name="Genero"
+                  value={formValues.Genero}
                   onChange={handleChange}
                 >
                   <option>seleccione...</option>
-                  <option value="1">Masculino</option>
-                  <option value="2">Femenino</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
                 </Form.Select>
                 <Form.Control.Feedback type="invalid">
                   agregue su sexo
@@ -176,7 +214,9 @@ function RegisterClientSeller(props) {
               <InputGroup hasValidation>
                 <Form.Select
                   aria-label="Default select example"
-                  name="type_user"
+                  name="Tipo"
+                  value={formValues.Tipo}
+                  onChange={handleChange}
                 >
                   <option>seleccione...</option>
                   <option value="1">Vendedor</option>

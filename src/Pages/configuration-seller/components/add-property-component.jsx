@@ -123,7 +123,7 @@ const AddProperty = ({ idPropiedad, onShowServices }) => {
               </InputGroup>
             </Form.Group>
           </Row>
-          <section style={{ display: "flex" }}>
+          <section style={{ display: "flex", gap: "10px" }}>
             <div style={{ width: "50%" }}>
               <img
                 style={{
@@ -131,7 +131,7 @@ const AddProperty = ({ idPropiedad, onShowServices }) => {
                   height: "17.8em",
                   borderRadius: "10px",
                 }}
-                src="https://res.cloudinary.com/djxwusqnb/image/upload/v1721696201/cyfpskdbxp3uvf3q1gjq.png"
+                src="https://res.cloudinary.com/djxwusqnb/image/upload/v1721942408/pr89me44zgqd7agqsp7a.png"
                 alt=""
               />
             </div>
@@ -147,7 +147,7 @@ const AddProperty = ({ idPropiedad, onShowServices }) => {
               />
             </div>
           </section>
-          <Row className="mb-2">
+          <Row className="mb-2 mt-5">
             <Form.Group controlId="validationCustom01">
               <CustomLabel>Descripcion General</CustomLabel>
               <Form.Group className="mb-3">
