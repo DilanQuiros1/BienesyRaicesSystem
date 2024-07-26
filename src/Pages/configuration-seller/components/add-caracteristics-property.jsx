@@ -11,7 +11,11 @@ const CustomLabel = styled(Form.Label)`
   font-size: 16px;
 `;
 
-const AddCaracteristicsProperty = ({ idPropiedad, onShowUbication }) => {
+const AddCaracteristicsProperty = ({
+  idPropiedad,
+  onShowUbication,
+  isEditing,
+}) => {
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = (event) => {
@@ -67,34 +71,8 @@ const AddCaracteristicsProperty = ({ idPropiedad, onShowUbication }) => {
         validated={validated}
         onSubmit={handleSubmit}
       >
-        <section className="mb-5">
-          <h1
-            style={{
-              color: "#28a745",
-              fontSize: "3em",
-              marginBottom: "10px",
-              fontWeight: "bold",
-            }}
-          >
-            Paso #1
-          </h1>
-          <h5
-            style={{
-              color: "#495057",
-              marginBottom: "30px",
-              fontWeight: "bold",
-            }}
-          >
-            Caracteristicas principales de la propiedad
-          </h5>
-          <p style={{ color: "#adb5bd" }}>Empecemos con lo basico</p>
-          <p style={{ color: "#adb5bd" }}>
-            Agrega las caracteristicas principales de tu propiedad
-          </p>
-          <p style={{ color: "#adb5bd" }}>
-            Te guiaremos en el registro de tu propiedad !!
-          </p>
-        </section>
+        {isEditing ? "" : <HeaderCaracteristicas />}
+
         <div style={{ display: "flex", gap: "80px", width: "100%" }}>
           <div
             style={{
@@ -201,14 +179,14 @@ const AddCaracteristicsProperty = ({ idPropiedad, onShowUbication }) => {
         </p>
         <section className="mb-5">
           <Button variant="dark" onClick={handleSubmit} className="mt-3">
-            Agregar Caracteristicas
+            {isEditing ? "Editar Caracteristicas" : "Agregar Caracteristicas"}
           </Button>
           <Button
             variant="dark"
             onClick={handleShowUbicationClick}
             className="mt-3"
           >
-            Agregar Caracteristicas
+            {isEditing ? "Editar Caracteristicas" : "Agregar Caracteristicas"}
           </Button>
         </section>
       </Form>
@@ -216,9 +194,43 @@ const AddCaracteristicsProperty = ({ idPropiedad, onShowUbication }) => {
   );
 };
 
+function HeaderCaracteristicas() {
+  return (
+    <section className="mb-5">
+      <h1
+        style={{
+          color: "#28a745",
+          fontSize: "3em",
+          marginBottom: "10px",
+          fontWeight: "bold",
+        }}
+      >
+        Paso #1
+      </h1>
+      <h5
+        style={{
+          color: "#495057",
+          marginBottom: "30px",
+          fontWeight: "bold",
+        }}
+      >
+        Caracteristicas principales de la propiedad
+      </h5>
+      <p style={{ color: "#adb5bd" }}>Empecemos con lo basico</p>
+      <p style={{ color: "#adb5bd" }}>
+        Agrega las caracteristicas principales de tu propiedad
+      </p>
+      <p style={{ color: "#adb5bd" }}>
+        Te guiaremos en el registro de tu propiedad !!
+      </p>
+    </section>
+  );
+}
+
 AddCaracteristicsProperty.propTypes = {
   idPropiedad: PropTypes.number.isRequired,
   onShowUbication: PropTypes.func.isRequired,
+  isEditing: PropTypes.bool.isRequired,
 };
 
 export default AddCaracteristicsProperty;
