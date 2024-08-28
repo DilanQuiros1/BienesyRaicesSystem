@@ -4,7 +4,7 @@
   gap: 50px;
 }
 
-#img-add-extraServices {
+.img-add-extraServices {
   position: relative;
   width: 70vh;
   height: 50vh;
@@ -17,5 +17,6 @@
 }
 
 .edit {
-  top: -100px !important;
+  top: 0px !important;
+  left: 100px;
 }

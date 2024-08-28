@@ -1,0 +1,54 @@
+.dashboard {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 5px;
+
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-content h2 {
+  margin: 0;
+  font-size: 2.5rem;
+  color: #fff;
+}
+
+.card-content p {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  color: #fff;
+}
+
+.blue {
+  background-color: #17a2b8;
+}
+
+.green {
+  background-color: #28a745;
+}
+
+.orange {
+  background-color: #fd7e14;
+}
+
+.red {
+  background-color: #dc3545;
+}

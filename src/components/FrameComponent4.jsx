@@ -1,11 +1,47 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
+import { useSearchParams } from "react-router-dom";
+import axios from "axios";
+import { useState, useEffect } from "react";
 import "../Styles/FrameComponent4.css";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 const FrameComponent4 = ({ className = "" }) => {
+  const [values, setValues] = useState({
+    ID_Usuario: "",
+    Nombre: "",
+    Apellidos: "",
+    Telefono: "",
+    Genero: "",
+    Correo: "",
+  });
+  const [searhParams] = useSearchParams();
+  useEffect(() => {
+    const fecthData = async () => {
+      const response = await axios.get(
+        `http://localhost:3000/spesific-property-component4?propiedadId=${searhParams.get(
+          "Id_Property"
+        )}`
+      );
+
+      if (response.data) {
+        const data = response.data[0];
+        setValues({
+          ID_Usuario: data.ID_Usuario,
+          Nombre: data.Nombre,
+          Apellidos: data.Apellidos,
+          Telefono: data.Telefono,
+          Genero: data.Genero,
+          Correo: data.Correo,
+        });
+      }
+      console.log(response);
+    };
+
+    fecthData();
+  }, [searhParams]);
   return (
     <section className={`contact-container-wrapper ${className}`}>
       <div className="contact-container">
@@ -16,7 +52,9 @@ const FrameComponent4 = ({ className = "" }) => {
               <div className="container47">
                 <div className="heading-3">
                   <div className="link5">
-                    <h2 className="aya-magdy">Byron Méndez</h2>
+                    <h2 className="aya-magdy">
+                      {values.Nombre} {values.Apellidos}
+                    </h2>
                   </div>
                 </div>
                 <b className="property-agent">Agente de propiedad</b>
@@ -75,7 +113,7 @@ const FrameComponent4 = ({ className = "" }) => {
                         1199 Pacific Hwy #110 San Diego
                       </div>
                       <div className="agent-address-space">
-                        <div className="div6">444 555 6667</div>
+                        <div className="div6">{values.Telefono}</div>
                       </div>
                     </div>
                   </div>
@@ -89,7 +127,7 @@ const FrameComponent4 = ({ className = "" }) => {
                       src="/icon-17.svg"
                     />
                   </div>
-                  <div className="ayamagdygmailcom">byron@gmail.com</div>
+                  <div className="ayamagdygmailcom">{values.Correo}</div>
                 </div>
                 <div className="horizontal-divider" />
                 <div className="agent-contact-items1">
@@ -101,10 +139,19 @@ const FrameComponent4 = ({ className = "" }) => {
                       src="/icon-18.svg"
                     />
                   </div>
-                  <div className="httpexamplecom">http://example.com</div>
+                  <div className="httpexamplecom">{values.Genero}</div>
                 </div>
               </div>
-              <Button className="link9" variant="primary">
+              <Button
+                className="link9"
+                variant="primary"
+                onClick={(e) => {
+                  const subject = encodeURIComponent(
+                    "Informacion sobre Propiedad"
+                  );
+                  window.location.href = `mailto:${values.Correo}?subject=${subject}`;
+                }}
+              >
                 Contactar <FontAwesomeIcon icon={faArrowRight} />
               </Button>
             </div>

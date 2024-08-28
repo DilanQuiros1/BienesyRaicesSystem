@@ -1,7 +1,10 @@
 import AddProperty from "./components/add-property-component";
 import AddCaracteristicsProperty from "./components/add-caracteristics-property";
-
+import { Button } from "react-bootstrap";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AddUbicationProperty from "./components/add-ubication-property";
+import { useSearchParams } from "react-router-dom";
 import Accordion from "react-bootstrap/Accordion";
 import ListOfServices from "./components/extra-services";
 import AddImagesProperty from "./components/add-images-property";
@@ -9,16 +12,41 @@ import FrameComponent6 from "../../components/FrameComponent6";
 import DescriptionEditSeller from "./components/description-edit-seller";
 
 const EditPropertySeller = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const backSellerView = () => {
+    navigate({
+      pathname: "/Prueba",
+      search: `?Correo=${searchParams.get("Correo")}`,
+    });
+  };
+  const [mapKey, setMapKey] = useState(0);
+
+  const reloadMap = () => {
+    setMapKey((prevKey) => prevKey + 1);
+  };
   return (
     <div style={{ background: "#007bff1a" }}>
       <header style={{ padding: "50px" }}>
+        <Button
+          variant="dark"
+          style={{
+            position: "relative",
+            left: "93%",
+            marginBottom: "50px",
+            width: "100px",
+          }}
+          onClick={backSellerView}
+        >
+          Salir
+        </Button>
         <DescriptionEditSeller />
       </header>
 
       {/* {PartToEdit()} */}
 
       <Accordion
-        defaultActiveKey="0"
+        defaultActiveKey={null}
         flush
         style={{ padding: "0 100px 30px 100px" }}
       >
@@ -37,12 +65,12 @@ const EditPropertySeller = () => {
             </h3>
           </Accordion.Header>
           <Accordion.Body>
-            <AddCaracteristicsProperty isEditing={true} />
+            <AddCaracteristicsProperty isEditing={true} idPropiedad={0} />
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
       <Accordion
-        defaultActiveKey="0"
+        defaultActiveKey={null}
         flush
         style={{ padding: "0 100px 30px 100px" }}
       >
@@ -59,13 +87,20 @@ const EditPropertySeller = () => {
               Mostrar Datos para Editar hubicacion de la propiedad
             </h3>
           </Accordion.Header>
+
           <Accordion.Body>
-            <AddUbicationProperty />
+            <p>
+              Si no se visualiza el mapa, puedes precionar el siguiente boton.
+            </p>
+            <button className="btn btn-warning" onClick={reloadMap}>
+              Recargar Mapa
+            </button>
+            <AddUbicationProperty key={mapKey} isEditing={true} />
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
       <Accordion
-        defaultActiveKey="0"
+        defaultActiveKey={null}
         flush
         style={{ padding: "0 100px 30px 100px" }}
       >
@@ -83,12 +118,12 @@ const EditPropertySeller = () => {
             </h3>
           </Accordion.Header>
           <Accordion.Body>
-            <AddProperty />
+            <AddProperty idPropiedad={0} isEditing={true} />
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
       <Accordion
-        defaultActiveKey="0"
+        defaultActiveKey={null}
         flush
         style={{ padding: "0 100px 30px 100px" }}
       >
@@ -106,12 +141,12 @@ const EditPropertySeller = () => {
             </h3>
           </Accordion.Header>
           <Accordion.Body>
-            <ListOfServices />
+            <ListOfServices idPropiedad={0} isEditing={true} />
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
       <Accordion
-        defaultActiveKey="0"
+        defaultActiveKey={null}
         flush
         style={{ padding: "0 100px 100px 100px" }}
       >
@@ -129,7 +164,7 @@ const EditPropertySeller = () => {
             </h3>
           </Accordion.Header>
           <Accordion.Body>
-            <AddImagesProperty />
+            <AddImagesProperty idPropiedad={0} isEditing={true} />
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>

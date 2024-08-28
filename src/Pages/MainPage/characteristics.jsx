@@ -5,7 +5,7 @@ const CharacteristicSystem = () => {
     <div className="promo-container">
       <div className="promo-image">
         <img
-          src="https://res.cloudinary.com/djxwusqnb/image/upload/v1720466871/llrpvpz7aco8hbhj6oid.jpg"
+          src="https://res.cloudinary.com/djxwusqnb/image/upload/v1721243917/nnv8pkjs7bmqbjgq1vni.jpg"
           alt="Promo"
         />
         <button className="promo-button">

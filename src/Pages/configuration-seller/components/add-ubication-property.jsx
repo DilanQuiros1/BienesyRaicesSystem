@@ -1,27 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import MapComponent from "./maps";
 import InputGroup from "react-bootstrap/InputGroup";
 import axios from "axios";
 import PropTypes from "prop-types";
+import { useSearchParams } from "react-router-dom";
 
-const AddUbicationProperty = ({ idUbicacion, onShowProperty }) => {
+const AddUbicationProperty = ({ idUbicacion, onShowProperty, isEditing }) => {
   const [validated, setValidated] = useState(false);
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-      console.log("enviar");
-    } else {
-      addUbicaciones();
-    }
-
-    setValidated(true);
-  };
+  const [selectedPlace, setSelectedPlace] = useState(null);
+  const [addedSuccess, setAddedSuccess] = useState(false);
   const [ubicaciones, setUbicaciones] = useState({
     ID_Ubicacion: idUbicacion,
-    Direccion: 0,
+    Direccion: "",
     Ciudad: "",
     Provincia: "",
     Pais: "",
@@ -29,6 +20,70 @@ const AddUbicationProperty = ({ idUbicacion, onShowProperty }) => {
     Latitud: "",
     Longitud: "",
   });
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const fetchUbicaciones = async () => {
+      const response = await axios.get(
+        `http://localhost:3000/ubicaciones-property?ID_Ubicacion=${searchParams.get(
+          "IdProperty"
+        )}`
+      );
+
+      if (response.data && response.data.length > 0) {
+        const data = response.data[0];
+        setUbicaciones({
+          ID_Ubicacion: idUbicacion,
+          Direccion: data.Direccion,
+          Ciudad: data.Ciudad,
+          Provincia: data.Provincia,
+          Pais: data.Pais,
+          CodigoPostal: data.CodigoPostal,
+          Latitud: data.Latitud,
+          Longitud: data.Longitud,
+        });
+      }
+    };
+
+    if (isEditing) {
+      fetchUbicaciones();
+    }
+  }, [isEditing, idUbicacion]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const form = event.currentTarget;
+
+    // Verifica si el formulario es válido
+    if (
+      form.checkValidity() === false ||
+      ubicaciones.Latitud.length == 0 ||
+      ubicaciones.Longitud.length == 0
+    ) {
+      console.log("Formulario inválido");
+    } else {
+      // Verifica si todos los campos requeridos están llenos
+      const formData = new FormData(form);
+      const allFieldsFilled = Array.from(formData.values()).every(
+        (value) => value.trim() !== ""
+      );
+
+      if (allFieldsFilled) {
+        if (isEditing) {
+          editUbicaciones();
+        } else {
+          addUbicaciones();
+        }
+        console.log("Formulario enviado con éxito");
+      } else {
+        console.log("Por favor, llena todos los campos requeridos");
+      }
+    }
+
+    setValidated(true);
+  };
 
   const handleShowProperty = () => {
     onShowProperty();
@@ -38,8 +93,6 @@ const AddUbicationProperty = ({ idUbicacion, onShowProperty }) => {
     const { name, value } = e.target;
     setUbicaciones({ ...ubicaciones, [name]: value });
   };
-
-  const [selectedPlace, setSelectedPlace] = useState(null);
 
   const handlePlaceSelected = (place) => {
     setSelectedPlace(place);
@@ -58,11 +111,23 @@ const AddUbicationProperty = ({ idUbicacion, onShowProperty }) => {
       console.error("Error al guardar las Ubicaciones:", error);
     }
   };
+  const editUbicaciones = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/ubicaciones/${searchParams.get("IdProperty")}`,
+        ubicaciones
+      );
+      setAddedSuccess(true);
+      console.log("Ubicaciones editadas:", response.data);
+    } catch (error) {
+      console.error("Error al editar las Ubicaciones:", error);
+    }
+  };
 
   return (
     <div>
       <div>
-        <Form noValidate validated={validated}>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Row className="mb-5 mt-5">
             <h3
               style={{
@@ -111,7 +176,7 @@ const AddUbicationProperty = ({ idUbicacion, onShowProperty }) => {
             </Form.Group>
             <Form.Group as={Col} md="4" controlId="validationCustomUsername">
               <Form.Label style={{ color: "#9bd358cf", fontWeight: "700" }}>
-                Ciudad de la propiedad{" "}
+                Ciudad/Canton de la propiedad{" "}
               </Form.Label>
               <InputGroup hasValidation>
                 <Form.Control
@@ -176,7 +241,13 @@ const AddUbicationProperty = ({ idUbicacion, onShowProperty }) => {
               Busca la hubicacion de tu propiedad
             </h3>
 
-            <MapComponent onPlaceSelected={handlePlaceSelected} />
+            <MapComponent
+              onPlaceSelected={handlePlaceSelected}
+              initialLat={Number(ubicaciones.Latitud)}
+              initialLng={Number(ubicaciones.Longitud)}
+              isEditing={true}
+              value={ubicaciones.Ciudad}
+            />
             {selectedPlace && (
               <div>
                 <h2>Coordenadas seleccionadas:</h2>
@@ -186,10 +257,17 @@ const AddUbicationProperty = ({ idUbicacion, onShowProperty }) => {
                 {(ubicaciones.Longitud = selectedPlace.lng)};
               </div>
             )}
+            <section style={{ marginTop: "10px" }}>
+              {addedSuccess && (
+                <section style={{ padding: "25px", background: "#dee2e6" }}>
+                  <p>Se edito la ubicacion de forma correcta</p>
+                </section>
+              )}
+            </section>
           </div>
 
-          <Button variant="dark" onClick={handleSubmit} className="mt-3">
-            Agregar Ubicacion
+          <Button variant="dark" type="submit" className="mt-3">
+            {isEditing ? "Editar Ubicaciones" : "Agregar Ubicaciones"}
           </Button>
           <Button variant="dark" onClick={handleShowProperty} className="mt-3">
             Mostrar Property
@@ -201,8 +279,9 @@ const AddUbicationProperty = ({ idUbicacion, onShowProperty }) => {
 };
 
 AddUbicationProperty.propTypes = {
-  idUbicacion: PropTypes.number.isRequired,
-  onShowProperty: PropTypes.func.isRequired,
+  idUbicacion: PropTypes.number,
+  onShowProperty: PropTypes.func,
+  isEditing: PropTypes.bool.isRequired,
 };
 
 export default AddUbicationProperty;

@@ -1,0 +1,63 @@
+.admin-header {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  color: #fff;
+  font-family: "Arial", sans-serif;
+}
+
+.header-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://res.cloudinary.com/djxwusqnb/image/upload/v1721243119/zc4yvaxwddqlgrwqs5ez.jpg"); /* Cambia esto por la URL de tu imagen */
+  background-size: cover;
+  background-position: center;
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-content {
+  text-align: center;
+}
+
+.header-content h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.header-content p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.header-nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.header-nav li {
+  margin: 0 15px;
+}
+
+.header-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.header-nav a:hover {
+  color: #252101; /* Cambia el color según tu preferencia */
+}

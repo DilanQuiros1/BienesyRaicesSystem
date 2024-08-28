@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import {
@@ -14,61 +14,49 @@ const mapContainerStyle = {
   height: "400px",
 };
 
+// Define the default marker icon with modified opacity
+const defaultIcon = {
+  url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+  scaledSize: new window.google.maps.Size(32, 32), // Size of the marker
+  anchor: new window.google.maps.Point(16, 32), // Position of the anchor
+  opacity: 0.5, // Adjust opacity here (0 = fully transparent, 1 = fully opaque)
+};
+
 const MapComponent = ({
   onPlaceSelected,
   initialLat,
   initialLng,
-  isShowing,
   isEditing,
 }) => {
   const searchBoxRef = useRef(null);
   const [marker, setMarker] = useState(null);
-  const [marker2, setMarker2] = useState({
-    lat2: 0, // Coordenadas centrales (Costa Rica en este caso)
-    lng2: 0,
-  });
-  const [input, setInput] = useState();
   const mapRef = useRef(null);
 
+  // Set marker when initial coordinates are available
   useEffect(() => {
-    setMarker2({ lat2: initialLat, lng2: initialLng });
+    if (initialLat && initialLng) {
+      setMarker({ lat: initialLat, lng: initialLng });
+    }
   }, [initialLat, initialLng]);
 
-  const center =
-    initialLat && initialLng
-      ? { lat: initialLat, lng: initialLng }
-      : {
-          lat: 9.748917, // Coordenadas centrales (Costa Rica en este caso)
-          lng: -83.753428,
-        };
+  // Define the map center based on initial coordinates
+  const center = {
+    lat: initialLat || 9.748917, // Default to Costa Rica if no initialLat
+    lng: initialLng || -83.753428, // Default to Costa Rica if no initialLng
+  };
 
+  // Handle map click to set a new marker
   const onMapClick = useCallback(
     (event) => {
       const lat = event.latLng.lat();
       const lng = event.latLng.lng();
       setMarker({ lat, lng });
       onPlaceSelected({ lat, lng });
-      console.log("click");
     },
     [onPlaceSelected]
   );
 
-  const handleInput = (e) => {
-    setInput(e.target.value);
-  };
-
-  const onMapClick1 = useCallback(() => {
-    if (typeof initialLat === "number" && typeof initialLng === "number") {
-      const lat = marker2.lat2;
-      const lng = marker2.lng2;
-      setMarker({ lat, lng });
-      onPlaceSelected({ lat, lng });
-      console.log("initial coordinates click", lat);
-    } else {
-      console.error("Invalid initialLat or initialLng for onMapClick1");
-    }
-  }, [initialLat, initialLng, onPlaceSelected]);
-
+  // Handle changes from the place search box
   const handlePlacesChanged = () => {
     const places = searchBoxRef.current.getPlaces();
     if (places && places.length > 0) {
@@ -85,26 +73,32 @@ const MapComponent = ({
     <LoadScript
       googleMapsApiKey="AIzaSyDRZWZc6e5o_I1Dw0DavOUMaFKwreL4Yao"
       libraries={libraries}
+      // Ensure the API script is loaded before proceeding
+      onLoad={() => {
+        if (window.google && window.google.maps) {
+          // API loaded, you can safely use window.google.maps
+        }
+      }}
     >
       {isEditing && (
-        <Button variant="dark" onClick={onMapClick1} className="mt-3 mb-3">
+        <Button
+          variant="dark"
+          onClick={() => mapRef.current.panTo(center)}
+          className="mt-3"
+        >
           Mostrar Ubicacion Actual
         </Button>
       )}
-      {!isShowing && (
-        <StandaloneSearchBox
-          onLoad={(ref) => (searchBoxRef.current = ref)}
-          onPlacesChanged={handlePlacesChanged}
-        >
-          <input
-            type="text"
-            value={input || ""}
-            onChange={handleInput}
-            className="search-bar mb-3"
-            placeholder="Busca tu propiedad aqui"
-          />
-        </StandaloneSearchBox>
-      )}
+      <StandaloneSearchBox
+        onLoad={(ref) => (searchBoxRef.current = ref)}
+        onPlacesChanged={handlePlacesChanged}
+      >
+        <input
+          type="text"
+          className="search-bar mb-3"
+          placeholder="Busca tu propiedad aquí"
+        />
+      </StandaloneSearchBox>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         center={center}
@@ -112,7 +106,7 @@ const MapComponent = ({
         onClick={onMapClick}
         onLoad={(map) => (mapRef.current = map)}
       >
-        {marker && <Marker position={marker} />}
+        {marker && <Marker position={marker} icon={defaultIcon} />}
       </GoogleMap>
     </LoadScript>
   );
@@ -123,7 +117,6 @@ MapComponent.propTypes = {
   isEditing: PropTypes.bool,
   initialLat: PropTypes.number,
   initialLng: PropTypes.number,
-  isShowing: PropTypes.bool,
 };
 
 export default MapComponent;

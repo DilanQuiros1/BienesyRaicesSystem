@@ -1,10 +1,19 @@
+import { useState } from "react";
 import Header from "../Header";
-import MainPage from "../MainPage/MainPage";
+
+import MainPropetys from "../MainPage/MainPage";
+
 function MainPageLoad() {
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleSearch = (value) => {
+    setSearchValue(value);
+    console.log("valor: ", searchValue);
+  };
   return (
     <div>
-      <Header />
-      <MainPage />
+      <Header onSearch={handleSearch} />
+      <MainPropetys />
     </div>
   );
 }

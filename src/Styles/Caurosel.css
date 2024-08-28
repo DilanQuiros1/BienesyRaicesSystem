@@ -1,0 +1,68 @@
+.custom-caption {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-15%);
+  color: #fff;
+  text-align: center;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+}
+
+.caption-content {
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.slide-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffcc00; /* Highlight color */
+  margin-bottom: 10px;
+}
+
+.slide-description {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+}
+
+.benefits-list li {
+  margin: 10px 0;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  color: #00cc66; /* Green color for check icons */
+  margin-right: 8px;
+  font-size: 1.5rem; /* Adjust size as needed */
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  overflow: hidden;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}

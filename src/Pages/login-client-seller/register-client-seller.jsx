@@ -4,10 +4,13 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { useSearchParams } from "react-router-dom";
+import Swal from "sweetalert2";
 function RegisterClientSeller(props) {
   const [validated, setValidated] = useState(false);
+  const [searchValue] = useSearchParams();
   const [formValues, setFormValues] = useState({
     ID_Usuario: "",
     Nombre: "",
@@ -20,8 +23,36 @@ function RegisterClientSeller(props) {
     Fecha_Creacion: "2024-07-08T13:09:15.000Z",
   });
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      const response = await axios.get(
+        `http://localhost:3000/buscar-usuario?Correo=${searchValue.get(
+          "Correo"
+        )}`
+      );
+      console.log(response);
+      if (response.data && response.data.length > 0) {
+        const data = response.data[0];
+        setFormValues({
+          ID_Usuario: data.ID_Usuario,
+          Nombre: data.Nombre,
+          Apellidos: data.Apellidos,
+          Password_Usuario: data.Password_Usuario,
+          Correo: data.Correo,
+          Telefono: data.Telefono,
+          Genero: data.Genero,
+          Tipo: data.Tipo === "Vendedor" ? "1" : "2",
+          Fecha_Creacion: "2024-07-08T13:09:15.000Z",
+        });
+      }
+    };
+
+    fetchUser();
+  }, [searchValue]);
+
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
+
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: type === "checkbox" ? checked : value,
@@ -31,34 +62,64 @@ function RegisterClientSeller(props) {
   const isEditing = props.isEdit;
 
   const handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
     } else {
-      console.log(formValues);
+      sendValues();
     }
 
     setValidated(true);
   };
 
-  const registerUser = async (e) => {
-    console.log(formValues);
+  const registerUser = async () => {
+    if (formValues.ID_Usuario.length === 9) {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/usuarios",
+          formValues
+        );
+        Swal.fire({
+          title: "Usuario registrado de forma correcta",
+          showClass: {
+            popup: `
+              animate__animated
+              animate__fadeInUp
+              animate__faster
+            `,
+          },
+          hideClass: {
+            popup: `
+              animate__animated
+              animate__fadeOutDown
+              animate__faster
+            `,
+          },
+        });
+      } catch (error) {
+        console.error("Error al registrar usuario", error);
+      }
+    } else {
+      Swal.fire("SNumero de identificacion invalido!");
+    }
+  };
+
+  const editUser = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/usuarios",
+      const response = await axios.put(
+        `http://localhost:3000/usuarios?Correo=${searchValue.get("Correo")}`,
         formValues
       );
-
-      console.log("Usuario registrado:", formValues, e, response);
+      console.log("Usuario Editado:", response);
     } catch (error) {
-      console.error("Error al registrar usuario", error);
+      console.error("Error al Editar usuario", error);
     }
   };
 
   const sendValues = () => {
     if (isEditing) {
-      console.log("editing");
+      editUser();
     } else {
       registerUser();
     }
@@ -90,11 +151,14 @@ function RegisterClientSeller(props) {
                 required
                 type="number"
                 name="ID_Usuario"
+                // disabled={props.closeFields ? "false" : "true"}
                 value={formValues.ID_Usuario}
                 onChange={handleChange}
-                defaultValue=""
+                placeholder=""
               />
-              <Form.Control.Feedback>bien!</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                Por favor, ingrese una identificación.
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group
               as={Col}
@@ -110,15 +174,16 @@ function RegisterClientSeller(props) {
                 value={formValues.Nombre}
                 onChange={handleChange}
                 placeholder=""
-                defaultValue=""
               />
-              <Form.Control.Feedback>Bien!</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                Por favor, ingrese un nombre.
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group
               as={Col}
               md="4"
               className="mb-5"
-              controlId="validationCustom02"
+              controlId="validationCustom03"
             >
               <Form.Label>Apellidos</Form.Label>
               <Form.Control
@@ -128,12 +193,13 @@ function RegisterClientSeller(props) {
                 value={formValues.Apellidos}
                 onChange={handleChange}
                 placeholder=""
-                defaultValue=""
               />
-              <Form.Control.Feedback>Bien!</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                Por favor, ingrese apellidos.
+              </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group as={Col} md="5" controlId="validationCustomUsername">
-              <Form.Label>Correo Electronico</Form.Label>
+            <Form.Group as={Col} md="5" controlId="validationCustom04">
+              <Form.Label>Correo Electrónico</Form.Label>
               <InputGroup hasValidation>
                 <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
                 <Form.Control
@@ -146,12 +212,12 @@ function RegisterClientSeller(props) {
                   required
                 />
                 <Form.Control.Feedback type="invalid">
-                  agregue un correo
+                  Por favor, ingrese un correo electrónico.
                 </Form.Control.Feedback>
               </InputGroup>
             </Form.Group>
-            <Form.Group as={Col} md="5" controlId="validationCustomUsername">
-              <Form.Label>Telefono de contacto</Form.Label>
+            <Form.Group as={Col} md="5" controlId="validationCustom05">
+              <Form.Label>Teléfono de Contacto</Form.Label>
               <InputGroup hasValidation>
                 <InputGroup.Text id="inputGroupPrepend">+506</InputGroup.Text>
                 <Form.Control
@@ -163,100 +229,93 @@ function RegisterClientSeller(props) {
                   required
                 />
                 <Form.Control.Feedback type="invalid">
-                  agregueun su telefono de contacto
+                  Por favor, ingrese un número de teléfono.
                 </Form.Control.Feedback>
               </InputGroup>
             </Form.Group>
-
-            <Form.Group as={Col} md="5" controlId="validationCustomUsername">
-              <Form.Label>Cree una contraseña</Form.Label>
-              <InputGroup hasValidation>
-                <Form.Control
-                  type="password"
-                  placeholder=""
-                  name="Password_Usuario"
-                  value={formValues.Password_Usuario}
-                  onChange={handleChange}
-                  aria-describedby="inputGroupPrepend"
-                  required
-                />
-                <Form.Control.Feedback type="invalid">
-                  agregue una contraseña
-                </Form.Control.Feedback>
-              </InputGroup>
-            </Form.Group>
-
-            <Form.Group as={Col} md="5" controlId="validationCustomUsername">
-              <Form.Label>sexo</Form.Label>
-              <InputGroup hasValidation>
-                <Form.Select
-                  aria-label="Default select example"
-                  name="Genero"
-                  value={formValues.Genero}
-                  onChange={handleChange}
-                >
-                  <option>seleccione...</option>
-                  <option value="Masculino">Masculino</option>
-                  <option value="Femenino">Femenino</option>
-                </Form.Select>
-                <Form.Control.Feedback type="invalid">
-                  agregue su sexo
-                </Form.Control.Feedback>
-              </InputGroup>
+            {!isEditing && (
+              <Form.Group as={Col} md="5" controlId="validationCustom06">
+                <Form.Label>Contraseña</Form.Label>
+                <InputGroup hasValidation>
+                  <Form.Control
+                    type="password"
+                    placeholder=""
+                    name="Password_Usuario"
+                    value={formValues.Password_Usuario}
+                    onChange={handleChange}
+                    aria-describedby="inputGroupPrepend"
+                    required
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Por favor, cree una contraseña.
+                  </Form.Control.Feedback>
+                </InputGroup>
+              </Form.Group>
+            )}
+            <Form.Group as={Col} md="5" controlId="validationCustom07">
+              <Form.Label>Género</Form.Label>
+              <Form.Select
+                aria-label="Seleccione un género"
+                name="Genero"
+                value={formValues.Genero}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Seleccione...</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                Por favor, seleccione un género.
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group
               as={Col}
               md="4"
               className="mt-3"
-              controlId="validationCustomUsername"
+              controlId="validationCustom08"
             >
-              <Form.Label>Vendedor o Usuario</Form.Label>
-              <InputGroup hasValidation>
-                <Form.Select
-                  aria-label="Default select example"
-                  name="Tipo"
-                  value={formValues.Tipo}
-                  onChange={handleChange}
-                >
-                  <option>seleccione...</option>
-                  <option value="1">Vendedor</option>
-                  <option value="2">Usuario</option>
-                </Form.Select>
-                <Form.Control.Feedback type="invalid">
-                  agregue su sexo
-                </Form.Control.Feedback>
-              </InputGroup>
-            </Form.Group>
-            <Form.Group className="mb-3 mt-3">
-              <Form.Check
+              <Form.Label>Tipo de Usuario</Form.Label>
+              <Form.Select
+                aria-label="Seleccione tipo de usuario"
+                name="Tipo"
+                value={formValues.Tipo}
+                onChange={handleChange}
                 required
-                label="Estoy de acuerdo con terminos y condiciones"
-                feedback="You must agree before submitting."
-                feedbackType="invalid"
-              />
+              >
+                <option value="">Seleccione...</option>
+                <option value="1">Vendedor</option>
+                <option value="2">Usuario</option>
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                Por favor, seleccione un tipo de usuario.
+              </Form.Control.Feedback>
             </Form.Group>
+            {!isEditing && (
+              <Form.Group className="mb-3 mt-3">
+                <Form.Check
+                  required
+                  label="Estoy de acuerdo con los términos y condiciones"
+                  feedback="Debe aceptar antes de enviar."
+                  feedbackType="invalid"
+                />
+              </Form.Group>
+            )}
           </Row>
+          <Modal.Footer>
+            <Button onClick={props.onHide} variant="secondary">
+              Cerrar
+            </Button>
+            {isEditing ? (
+              <Button type="submit" className="btn btn-warning">
+                Editar Usuario
+              </Button>
+            ) : (
+              <Button type="submit">Agregar Usuario</Button>
+            )}
+          </Modal.Footer>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={props.onHide} variant="secondary">
-          Close
-        </Button>
-        {isEditing == false && (
-          <Button type="button" onClick={sendValues}>
-            Agregar Usuario
-          </Button>
-        )}
-        {isEditing == true && (
-          <Button
-            type="button"
-            className="btn btn-warning"
-            onClick={sendValues}
-          >
-            Editar Usuario
-          </Button>
-        )}
-      </Modal.Footer>
     </Modal>
   );
 }
@@ -265,6 +324,7 @@ RegisterClientSeller.propTypes = {
   onHide: PropTypes.func.isRequired,
   show: PropTypes.bool.isRequired,
   isEdit: PropTypes.bool.isRequired,
+  closeFields: PropTypes.bool,
 };
 
 export default RegisterClientSeller;

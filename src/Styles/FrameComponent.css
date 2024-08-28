@@ -566,7 +566,6 @@
   box-sizing: border-box;
 }
 .container12 {
-  width: 93px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -576,7 +575,7 @@
 }
 .container12:hover {
   display: flex;
-  width: 93px;
+
   height: auto;
   flex-direction: row;
   gap: var(--gap-0);

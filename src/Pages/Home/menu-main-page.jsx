@@ -5,6 +5,7 @@ import { useState } from "react";
 const NavItems = () => {
   const [modalShow, setModalShow] = useState(false);
   const [modalShowLogin, setModalShowLogin] = useState(false);
+
   return (
     <nav className="nav">
       <ul className="nav-list">
@@ -27,6 +28,7 @@ const NavItems = () => {
               show={modalShow}
               onHide={() => setModalShow(false)}
               isEdit={false}
+              closeFields={true}
             />
           </div>
           <div className="nav-item">

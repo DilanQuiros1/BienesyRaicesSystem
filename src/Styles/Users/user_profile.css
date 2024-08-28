@@ -1,0 +1,54 @@
+.profile-container {
+  background-color: #f7f9fc;
+  min-height: 100vh;
+}
+
+.sidebar {
+  border-right: 1px solid #ddd;
+}
+
+.profile-pic {
+  width: 290px;
+  height: 300px;
+}
+
+.profile-stats div {
+  margin-bottom: 10px;
+}
+
+.main-content {
+  padding: 20px;
+}
+
+.cover-photo {
+  height: 200px;
+  background: url("https://res.cloudinary.com/djxwusqnb/image/upload/v1721413271/fharw4h3bwz5svqncycw.jpg")
+    center/cover no-repeat;
+  position: relative;
+  border-radius: 5px;
+}
+
+.change-cover-btn {
+  margin: 15px;
+}
+
+.bg-white {
+  background-color: #fff;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #ddd;
+}
+
+/* .btn-outline-primary {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.btn-primary {
+  background-color: #ffffff;
+} */
+
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}

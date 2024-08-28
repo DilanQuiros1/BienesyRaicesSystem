@@ -1,43 +1,91 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 import InputGroup from "react-bootstrap/InputGroup";
 import axios from "axios";
-
+import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
-
+import Swal from "sweetalert2";
 const CustomLabel = styled(Form.Label)`
   font-weight: bold;
   color: cadetblue;
   font-size: 16px;
 `;
 
-const AddProperty = ({ idPropiedad, onShowServices }) => {
+const AddProperty = ({ idPropiedad, onShowServices, isEditing }) => {
   const [validated, setValidated] = useState(false);
-
+  const [searchParams] = useSearchParams();
+  const [addedSuccess, setAddedSuccess] = useState(false);
   const handleSubmit = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     const form = event.currentTarget;
+
+    // Verifica si el formulario es válido
     if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
+      console.log("Formulario inválido");
+    } else {
+      // Verifica si todos los campos requeridos están llenos
+      const formData = new FormData(form);
+      const allFieldsFilled = Array.from(formData.values()).every(
+        (value) => value.trim() !== ""
+      );
+
+      if (allFieldsFilled) {
+        if (isEditing) {
+          editPropertySeller();
+        } else {
+          addPropertySeller();
+        }
+        console.log("Formulario enviado con éxito");
+      } else {
+        console.log("Por favor, llena todos los campos requeridos");
+      }
     }
 
     setValidated(true);
   };
 
-  const handleShowServices = () => {
-    onShowServices();
-  };
-
   const [property, setProperty] = useState({
     ID_Propiedad: idPropiedad,
-    ID_Vendedor: 0,
+    ID_Vendedor: "",
     ID_Caracteristicas: idPropiedad,
     Nombre: "",
     Descripcion: "",
+    Fecha_Creacion: "",
     Precio: "",
     ID_Ubicacion: idPropiedad,
   });
+
+  useEffect(() => {
+    const fetchProperty = async () => {
+      const response = await axios.get(
+        `http://localhost:3000/propiedades-selected?ID_Property=${searchParams.get(
+          "IdProperty"
+        )}`
+      );
+      if (response.data && response.data.length > 0) {
+        const data = response.data[0];
+        const formattedFechaCreacion = data.Fecha_Creacion
+          ? new Date(data.Fecha_Creacion).toISOString().split("T")[0]
+          : "";
+        setProperty({
+          ID_Propiedad: data.ID_Propiedad,
+          ID_Vendedor: data.ID_Vendedor,
+          ID_Caracteristicas: data.ID_Propiedad,
+          Fecha_Creacion: formattedFechaCreacion,
+          Nombre: data.Nombre,
+          Descripcion: data.Descripcion,
+          Precio: data.Precio,
+          ID_Ubicacion: data.ID_Propiedad,
+        });
+      }
+    };
+    if (isEditing) {
+      fetchProperty();
+    }
+  }, [searchParams, isEditing]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,13 +93,37 @@ const AddProperty = ({ idPropiedad, onShowServices }) => {
   };
 
   const addPropertySeller = async () => {
+    console.log(property);
     try {
-      const response = await axios.post(
-        "http://localhost:3000/propiedades",
+      if (property.Descripcion.length > 254) {
+        Swal.fire("Descripcion muy extesa!");
+      } else {
+        const response = await axios.post(
+          "http://localhost:3000/propiedades",
+          property
+        );
+        console.log("Propiedad guardada:", response.data);
+        onShowServices();
+      }
+    } catch (error) {
+      console.error("Error al guardar la propiedad:", error);
+    }
+  };
+  const variant = isEditing ? "warning" : "dark";
+
+  const handleShowServices = () => {
+    onShowServices();
+  };
+
+  const editPropertySeller = async () => {
+    console.log("Edit: ", property);
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/propiedades/${searchParams.get("IdProperty")}`,
         property
       );
       console.log("Propiedad guardada:", response.data);
-      onShowServices();
+      setAddedSuccess(true);
     } catch (error) {
       console.error("Error al guardar la propiedad:", error);
     }
@@ -81,6 +153,7 @@ const AddProperty = ({ idPropiedad, onShowServices }) => {
               <Form.Control
                 required
                 type="number"
+                disabled={isEditing}
                 name="ID_Vendedor"
                 onChange={handleChange}
                 value={property.ID_Vendedor}
@@ -120,6 +193,7 @@ const AddProperty = ({ idPropiedad, onShowServices }) => {
                 <Form.Control.Feedback type="invalid">
                   Ingresa el precio.
                 </Form.Control.Feedback>
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
               </InputGroup>
             </Form.Group>
           </Row>
@@ -159,9 +233,23 @@ const AddProperty = ({ idPropiedad, onShowServices }) => {
                   as="textarea"
                   rows={5}
                 />
+                <Form.Control.Feedback type="invalid">
+                  Ingresa la direccion de la propiedad.
+                </Form.Control.Feedback>
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
               </Form.Group>
+            </Form.Group>
+            <Form.Group as={Col} md="4" controlId="validationCustom02">
+              <CustomLabel>Fecha de Creación</CustomLabel>
+              <Form.Control
+                required
+                type="date"
+                name="Fecha_Creacion"
+                onChange={handleChange}
+                value={property.Fecha_Creacion} // Ensure this is in the format 'YYYY-MM-DD'
+              />
               <Form.Control.Feedback type="invalid">
-                Ingresa la description de la propiedad.
+                Ingresa la fecha de creación.
               </Form.Control.Feedback>
               <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </Form.Group>
@@ -169,9 +257,28 @@ const AddProperty = ({ idPropiedad, onShowServices }) => {
           <p style={{ color: "#198754", fontSize: "1.1em" }}>
             Si ya agregaste todos los datos, preciona el siguiente boton.
           </p>
+          {addedSuccess && (
+            <section style={{ padding: "25px", background: "#dee2e6" }}>
+              <p>
+                Su propiedad se guardó de forma correcta con los datos que
+                proporcionaste, ¡muchas gracias por utilizar nuestros servicios!
+              </p>
+              {!isEditing && (
+                <Button
+                  variant="success"
+                  onClick={() => window.location.reload()}
+                  className="mt-3"
+                >
+                  Agregar Otra Propiedad
+                </Button>
+              )}
+            </section>
+          )}
           <section className="mb-5 mt-5">
-            <Button variant="dark" onClick={addPropertySeller} className="mt-3">
-              Agregar Propiedad
+            <Button variant={variant} type="submit" className="mt-3">
+              {isEditing
+                ? "Editar datos principales"
+                : "Agregar Datos principales"}
             </Button>
             <Button
               variant="dark"
@@ -188,6 +295,7 @@ const AddProperty = ({ idPropiedad, onShowServices }) => {
 };
 AddProperty.propTypes = {
   idPropiedad: PropTypes.number.isRequired,
-  onShowServices: PropTypes.func.isRequired,
+  onShowServices: PropTypes.func,
+  isEditing: PropTypes.bool.isRequired,
 };
 export default AddProperty;

@@ -79,28 +79,16 @@
 .strong-address-parent {
   align-self: stretch;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  flex-wrap: wrap;
   width: auto;
   height: auto;
-  gap: var(--gap-0);
+  gap: 50px 100px;
   transform: rotate(0deg);
   font-size: var(--previewthemeforestnet-yantramanav-regular-16-size);
   color: var(--previewthemeforestnet-dove-gray);
   font-family: var(--previewthemeforestnet-yantramanav-regular-15);
 }
-.strong-address-parent:hover {
-  display: flex;
-  align-self: stretch;
-  width: auto;
-  height: auto;
-  flex-direction: column;
-  gap: var(--gap-0);
-  align-items: flex-start;
-  justify-content: flex-start;
-  transform: rotate(0deg);
-}
+
 .address-parent {
   position: absolute;
   top: 0.2px;
@@ -158,6 +146,8 @@
   position: relative;
   line-height: 27px;
   display: flex;
+  align-items: center;
+  gap: 10px;
   z-index: 1;
 }
 .open-on-google:hover {
@@ -214,7 +204,7 @@
 .open-on-google-maps-parent {
   position: absolute;
   top: 0px;
-  left: 1022.4px;
+  left: 700px;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -244,6 +234,7 @@
   position: relative;
   max-width: 100%;
   display: flex;
+  flex-wrap: wrap;
   width: auto;
   gap: var(--gap-0);
   align-items: flex-start;

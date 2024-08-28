@@ -1,29 +1,78 @@
 import PropTypes from "prop-types";
 import "../Styles/FrameComponent.css";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 const FrameComponent = ({ className = "" }) => {
+  const [values, setValues] = useState({
+    ID_Propiedad: "55",
+    Precio: "100000.00",
+    Ciudad: "San Isidro",
+    Direccion: "casas de arbol",
+    Provincia: "San Jose",
+    Area_Lote: "25000.00",
+    Num_Habitaciones: 5,
+    Num_Banos: 3,
+  });
+  const [searhParams] = useSearchParams();
+  const navigate = useNavigate();
+  useEffect(() => {
+    console.log("View Seller ", searhParams.get("isViewSeller"));
+    const fecthData = async () => {
+      const response = await axios.get(
+        `http://localhost:3000/spesific-property-component?propiedadId=${searhParams.get(
+          "Id_Property"
+        )}`
+      );
+
+      if (response.data) {
+        const data = response.data[0];
+        setValues({
+          ID_Propiedad: data.ID_Propiedad,
+          Precio: data.Precio,
+          Ciudad: data.Ciudad,
+          Direccion: data.Direccion,
+          Provincia: data.Provincia,
+          Area_Lote: data.Area_Lote,
+          Num_Habitaciones: data.Num_Habitaciones,
+          Num_Banos: data.Num_Banos,
+        });
+      }
+      console.log(response);
+    };
+
+    fecthData();
+  }, [searhParams]);
+
+  const backView = () => {
+    window.history.back();
+  };
+
   return (
     <div className={`container-wrapper ${className}`}>
       <div className="container1">
         <div className="villa-in-2639-grand-ave-san-di-parent">
-          <h3 className="villa-in-2639">Villa in 2639 Grand Ave San Diego</h3>
+          <h3 className="villa-in-2639">
+            Gran propiedad, ubicada en {values.Ciudad}
+          </h3>
           <div className="container2">
             <div className="paragraph">
               <div className="type-your-digit-security-code-wrapper">
-                <b className="type-your">{`$170,000 `}</b>
+                <b className="type-your">${values.Precio}</b>
               </div>
-              <div className="year">/ Año</div>
             </div>
             <div className="border-wrapper">
-              <div className="border">
-                <div className="for-rent">En renta</div>
+              <div>
+                <div className="for-rent">Disponible</div>
               </div>
             </div>
             <div className="container-container">
               <div className="container3">
                 <img className="icon" alt="" src="/icon.svg" />
-                <div className="grand-ave-san">
-                  2639 Grand Ave San Diego, CA 92109
+                <div className="grand-ave-san" style={{ width: "100%" }}>
+                  {values.Direccion} , {values.Ciudad}, {values.Provincia}
                 </div>
               </div>
             </div>
@@ -44,7 +93,9 @@ const FrameComponent = ({ className = "" }) => {
               </div>
               <div className="container9">
                 <div className="container10">
-                  <b className="property-details-units">501</b>
+                  <b className="property-details-units">
+                    {values.ID_Propiedad}
+                  </b>
                 </div>
                 <div className="container11">
                   <div className="property-id">Propiedad ID</div>
@@ -64,7 +115,12 @@ const FrameComponent = ({ className = "" }) => {
               </div>
               <div className="container9">
                 <div className="container16">
-                  <b className="sqft">500 SqFt</b>
+                  <b className="sqft">
+                    {values.Area_Lote}{" "}
+                    <span style={{ fontSize: "17px", marginLeft: "5px" }}>
+                      m²
+                    </span>
+                  </b>
                 </div>
                 <div className="container17">
                   <div className="size">Tamaño</div>
@@ -84,7 +140,7 @@ const FrameComponent = ({ className = "" }) => {
               </div>
               <div className="container9">
                 <div className="container10">
-                  <b className="b">5</b>
+                  <b className="b">{values.Num_Habitaciones}</b>
                 </div>
                 <div className="container11">
                   <div className="bedrooms">Dormitorios</div>
@@ -104,7 +160,7 @@ const FrameComponent = ({ className = "" }) => {
               </div>
               <div className="container9">
                 <div className="container10">
-                  <b className="b">3</b>
+                  <b className="b">{values.Num_Banos}</b>
                 </div>
                 <div className="container11">
                   <div className="bathrooms">Baños</div>
@@ -135,6 +191,11 @@ const FrameComponent = ({ className = "" }) => {
                 <img className="icon6" alt="" src="/icon-8.svg" />
               </div>
             </div>
+          </div>
+          <div>
+            <Button variant="dark" onClick={backView}>
+              Salir
+            </Button>
           </div>
         </div>
       </div>

@@ -1,19 +1,44 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import "../Styles/FrameComponent1.css";
+import { useSearchParams } from "react-router-dom";
+import axios from "axios";
 
 const FrameComponent1 = ({ className = "", onImageClick }) => {
-  const images = [
-    "/009870x420jpg@2x.png",
-    "/12250x130jpg@2x.png",
-    "/10250x130jpg@2x.png",
-    "/009250x130jpg@2x.png",
-    "/008250x130jpg@2x.png",
-    "/007250x130jpg@2x.png"
-  ];
-
+  const [images, setImages] = useState([]);
+  const [description, setDescription] = useState();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [searhParams] = useSearchParams();
+
+  // Fetch images from API
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/imagenes-property?ID_Propiedad=${searhParams.get(
+            "Id_Property"
+          )}`
+        );
+        const data = await response.json();
+        setImages(data.map((item) => item.Url_img));
+
+        const responseDescription = await axios.get(
+          `http://localhost:3000/spesific-property-component1?propiedadId=${searhParams.get(
+            "Id_Property"
+          )}`
+        );
+        setDescription(responseDescription.data.Descripcion);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchImages();
+  }, [searhParams]);
 
   useEffect(() => {
     if (isTransitioning) {
@@ -36,6 +61,10 @@ const FrameComponent1 = ({ className = "", onImageClick }) => {
   const handleNextImage = () => {
     changeImage((currentImageIndex + 1) % images.length);
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Optionally, add a loading spinner or message
+  }
 
   return (
     <section className={`container-child ${className}`}>
@@ -71,10 +100,14 @@ const FrameComponent1 = ({ className = "", onImageClick }) => {
           {images.map((image, index) => (
             <div
               key={index}
-              className={`container40 ${index === 2 ? "container42" : ""}`}
+              className={`container40 ${
+                index === currentImageIndex ? "container42" : ""
+              }`}
             >
               <img
-                className={`x130jpg-icon ${index === 2 ? "x130jpg-icon2" : ""}`}
+                className={`x130jpg-icon ${
+                  index === currentImageIndex ? "x130jpg-icon2" : ""
+                }`}
                 loading="lazy"
                 alt=""
                 src={image}
@@ -83,7 +116,7 @@ const FrameComponent1 = ({ className = "", onImageClick }) => {
                   changeImage(index);
                 }}
               />
-              {index === 2 && <div className="overlay" />}
+              {index === currentImageIndex && <div className="overlay" />}
             </div>
           ))}
         </div>

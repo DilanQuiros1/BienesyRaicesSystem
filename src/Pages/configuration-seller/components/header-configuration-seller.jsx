@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const HeaderContainer = styled.div`
   background-image: url("https://res.cloudinary.com/djxwusqnb/image/upload/v1721243119/zc4yvaxwddqlgrwqs5ez.jpg");
   background-size: cover;
@@ -25,6 +27,16 @@ const Icon = styled.div`
 `;
 
 const HeaderSeller = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const showViewConfigSeller = () => {
+    // navigate({
+    //   pathname: "/Prueba",
+    //   search: `?Correo=${encodeURIComponent(searchParams.get("Correo"))}`,
+    // });
+    window.history.back();
+  };
   return (
     <HeaderContainer>
       <Container>
@@ -52,14 +64,10 @@ const HeaderSeller = () => {
           <div>
             <Button
               variant="secondary"
+              onClick={showViewConfigSeller}
               style={{ width: "10em", height: "40px" }}
             >
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="/Prueba"
-              >
-                Salir
-              </Link>
+              Salir
             </Button>
           </div>
         </div>

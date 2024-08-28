@@ -18,11 +18,14 @@
     "@react-google-maps/api": "^2.19.3",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.24.0",
-    "styled-components": "^6.1.11"
+    "styled-components": "^6.1.11",
+    "sweetalert2": "^11.12.4"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

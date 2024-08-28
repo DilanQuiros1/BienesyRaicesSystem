@@ -9,9 +9,11 @@ import HeaderSeller from "./components/header-configuration-seller";
 import AddCaracteristicsProperty from "./components/add-caracteristics-property";
 import AddUbicationProperty from "./components/add-ubication-property";
 import AddProperty from "./components/add-property-component";
+import { useSearchParams } from "react-router-dom";
 
 const RegisterProperty = () => {
-  const [contador, setContador] = useState(null);
+  const [IdFinca, setIdFinca] = useState();
+  const [searchParams] = useSearchParams();
   // const [validated, setValidated] = useState(false);
 
   const [showUbications, setShowUbications] = useState(false);
@@ -32,22 +34,22 @@ const RegisterProperty = () => {
     setShowImages(true);
   };
 
-  const obtenerContador = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:3000/propiedades/count"
-      );
-      const nuevoContador = response.data.count + 51;
-      setContador(nuevoContador);
-      console.log("contador: ", nuevoContador);
-    } catch (error) {
-      console.error("Error al obtener el contador:", error);
-    }
-  };
+  // const obtenerContador = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "http://localhost:3000/propiedades/count"
+  //     );
+  //     const nuevoContador = response.data.count + 51;
+  //     setContador(nuevoContador);
+  //     console.log("contador: ", nuevoContador);
+  //   } catch (error) {
+  //     console.error("Error al obtener el contador:", error);
+  //   }
+  // };
 
   useEffect(() => {
-    obtenerContador();
-  }, []);
+    setIdFinca(searchParams.get("ID_Propiedad"));
+  }, [searchParams]);
 
   const [mapKey, setMapKey] = useState(0);
 
@@ -86,14 +88,11 @@ const RegisterProperty = () => {
           </h3>
         </div>
         <section>
-          {contador !== null && !showUbications && (
-            <AddCaracteristicsProperty
-              idPropiedad={contador}
-              onShowUbication={handleShowUbication}
-            />
+          {!showUbications && (
+            <AddCaracteristicsProperty onShowUbication={handleShowUbication} />
           )}
         </section>
-        {contador !== null && showUbications && !showProperty && (
+        {IdFinca !== null && showUbications && !showProperty && (
           <div>
             <h1
               style={{
@@ -120,16 +119,19 @@ const RegisterProperty = () => {
             <button className="btn btn-warning" onClick={reloadMap}>
               Recargar Mapa
             </button>
-            <AddUbicationProperty
-              key={mapKey}
-              idUbicacion={contador}
-              onShowProperty={handleShowProperty}
-            />
+            {IdFinca && (
+              <AddUbicationProperty
+                key={mapKey}
+                idUbicacion={IdFinca}
+                isEditing={false}
+                onShowProperty={handleShowProperty}
+              />
+            )}
           </div>
         )}
 
         <div style={{ width: "100%" }}>
-          {contador !== null && showProperty && !showServices && (
+          {IdFinca !== null && showProperty && !showServices && (
             <section
               className="mt-5 mb-5"
               style={{ position: "relative", top: "-100px" }}
@@ -153,14 +155,16 @@ const RegisterProperty = () => {
               >
                 Faltan unos cuantos pasos!!
               </p>
-              <AddProperty
-                idPropiedad={contador}
-                onShowServices={handleShowServices}
-              />
+              {IdFinca && (
+                <AddProperty
+                  idPropiedad={IdFinca}
+                  onShowServices={handleShowServices}
+                />
+              )}
             </section>
           )}
 
-          {contador !== null && showServices && !showImages && (
+          {IdFinca !== null && showServices && !showImages && (
             <section
               className="mt-5 mb-5"
               style={{ position: "relative", top: "-100px" }}
@@ -184,14 +188,16 @@ const RegisterProperty = () => {
               >
                 Ya casi esta listo!!
               </p>
-              <ListOfServices
-                idPropiedad={contador}
-                onShowImages={handleShowImages}
-              />
+              {IdFinca && (
+                <ListOfServices
+                  idPropiedad={IdFinca}
+                  onShowImages={handleShowImages}
+                />
+              )}
             </section>
           )}
 
-          {contador !== null && showImages && (
+          {IdFinca !== null && showImages && (
             <section
               style={{ position: "relative", top: "-100px" }}
               className="mt-5 mb-5"
@@ -216,7 +222,7 @@ const RegisterProperty = () => {
                 Este es el ultimo paso para registrar tu propiedad en
                 <apan> RealState.com!!</apan>
               </p>
-              <AddImagesProperty idPropiedad={contador} />
+              {IdFinca && <AddImagesProperty idPropiedad={IdFinca} />}
             </section>
           )}
         </div>
